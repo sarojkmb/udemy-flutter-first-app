@@ -7,28 +7,35 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-
   @override
-  State<StatefulWidget> createState(){
+  State<StatefulWidget> createState() {
     //TODO implement create state
     return _MyAppState();
   }
-
 }
 
-class _MyAppState extends State<MyApp>{
-
+class _MyAppState extends State<MyApp> {
   var _questionIdex = 0;
-  var questions = [
-    'What is you favorite color?',
-    'What is you favorite animal?'
+  final questions = const [
+    {
+      'questionText': 'What is you favorite color?',
+      'answers': ['red', 'green', 'blue', 'yellow']
+    },
+    {
+      'questionText': 'What is you favorite animal?',
+      'answers': ['dog', 'cat', 'cow', 'hen']
+    },
+    {
+      'questionText': 'What is you favorite teacher?',
+      'answers': ['chakradhar', 'ghana', 'sanatan', 'bidyadhar']
+    },
   ];
 
   void _answerQuestion() {
-    setState( (){
+    setState(() {
       _questionIdex++;
     });
-    
+
     print('Answer chosen $_questionIdex');
   }
 
@@ -39,14 +46,19 @@ class _MyAppState extends State<MyApp>{
         appBar: AppBar(
           title: Text("My first App"),
         ),
-        body: Column(
-          children: [
-            Question(questions[_questionIdex]),
-            Answer(_answerQuestion),
-            Answer(_answerQuestion),
-            Answer(_answerQuestion),
-          ],
-        ),
+        body: _questionIdex < questions.length
+            ? Column(
+                children: [
+                  Question(questions[_questionIdex]['questionText']),
+                  ...(questions[_questionIdex]['answers'] as List<String>)
+                      .map((answer) {
+                    return Answer(_answerQuestion, answer);
+                  }).toList()
+                ],
+              )
+            : Center(
+                child: Text('You did it!'),
+              ),
       ),
     );
   }
